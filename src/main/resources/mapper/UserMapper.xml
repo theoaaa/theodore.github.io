@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.scau.internshipsystem.system.mapper.UserMapper">
+
+    <sql id="userMessageRef">
+        id,
+        account,
+        username,
+        password,
+        grade,
+        subject,
+        email,
+        state,
+        register_time,
+        last_login_time
+    </sql>
+    <resultMap id="userMap" type="org.scau.internshipsystem.system.entity.User">
+        <id column="id" jdbcType="DECIMAL" property="id"></id>
+        <result column="account" jdbcType="DECIMAL" property="account"></result>
+        <result column="username" jdbcType="VARCHAR" property="username"></result>
+        <result column="password" jdbcType="VARCHAR" property="password"></result>
+        <result column="state" jdbcType="DECIMAL" property="state"></result>
+        <result column="grade" jdbcType="VARCHAR" property="grade"></result>
+        <result column="subject" jdbcType="VARCHAR" property="subject"></result>
+        <result column="email" jdbcType="VARCHAR" property="email"></result>
+        <result column="register_time" jdbcType="TIMESTAMP" property="registerTime"></result>
+        <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime"></result>
+        <collection property="roleList"
+                    select="org.scau.internshipsystem.system.mapper.RoleMapper.findRoleOfUserByUserID"
+                    column="id"></collection>
+    </resultMap>
+    <select id="findUserMessage" resultMap="userMap">
+        select
+        <include refid="userMessageRef"></include>
+        from user
+        <if test="user!=null">
+            where 1=1
+            <if test="user.grade != null and user.grade!= ''">
+                and grade like concat ('%', #{user.grade}, '%')
+            </if>
+            <if test="user.subject != null and user.subject!= ''">
+                and subject like concat ('%', #{user.subject},'%')
+            </if>
+            <if test="user.roleList != null">
+                and id in (select user_id from user_role_ref where role_id =
+                <foreach collection="user.roleList" item="role" close=")">
+                    #{role.id}
+                </foreach>
+            </if>
+            <if test="user.state != null">
+                and state = #{user.state}
+            </if>
+            <if test="user.account != null and user.account!= ''">
+                and account like concat ('%', #{user.account}, '%')
+            </if>
+        </if>
+    </select>
+
+    <select id="findUserMessageByUserId" resultMap="userMap" parameterType="int">
+        select
+        <include refid="userMessageRef"></include>
+        from user
+        where id=#{id}
+    </select>
+</mapper>

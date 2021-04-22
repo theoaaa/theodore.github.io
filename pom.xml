@@ -18,7 +18,7 @@
         <java.version>1.8</java.version>
         <mybatis-plus.version>3.1.2</mybatis-plus.version>
         <druid.version>1.1.18</druid.version>
-        <shiro.version>1.4.0</shiro.version>
+        <shiro.version>1.7.0</shiro.version>
         <fastjson.version>1.2.49</fastjson.version>
         <freemarker.version>2.3.28</freemarker.version>
         <p6spy.version>3.8.1</p6spy.version>
